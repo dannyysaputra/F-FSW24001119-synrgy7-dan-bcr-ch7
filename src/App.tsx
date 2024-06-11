@@ -11,6 +11,7 @@ import Login from "./pages/dashboard/Login";
 import HomeDashboard from "./pages/dashboard/Index";
 
 import "./style.css";
+import LayoutDashboard from "./components/dashboard/layout";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
             <Route path="cars" element={<Cars />} />
           </Route>
 
-          <Route path="/dashboard">
+          <Route path="/dashboard" element={<LayoutDashboard />}>
             <Route index element={
               <Protected>
                 <HomeDashboard />
