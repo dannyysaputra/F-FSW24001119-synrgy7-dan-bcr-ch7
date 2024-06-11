@@ -1,6 +1,37 @@
 import car from "../assets/img/car.png";
+import React, { useState } from "react";
+import { Form, FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
 
 export default function SearchCars() {
+  const [tipeDriver, setTipeDriver] = useState<string>("");
+  const [startDate, setStartDate] = useState<Date>(new Date()); // Preset to today
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case "tipeDriver":
+        setTipeDriver(value as string); // Type assertion for clarity
+        break;
+      case "startDate":
+        setStartDate(new Date(value as string)); // Ensure valid date format
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // Implement form submission logic here (e.g., send data to backend)
+    console.log("Submitted search form:", {
+      tipeDriver,
+      startDate,
+      // Include other form field values if needed
+    });
+  };
   return (
     <>
       <section id="hero" className="mt-5">
@@ -28,52 +59,85 @@ export default function SearchCars() {
         <div className="container px-5 mb-5">
           <div className="card shadow py-2 bg-body-tertiary rounded search-card">
             <div className="card-body">
-              {/* <form action=""> */}
-              <div className="row">
-                <div className="col">
-                  <label className="ms-1 mb-2 fw-light">Tipe Driver</label>
-                  <select
-                    className="form-select form-select-sm fw-light"
-                    id="tipeDriver"
-                    required
-                  >
-                    <option selected disabled hidden>
-                      Pilih Tipe Driver
-                    </option>
-                    <option value="dengan-sopir">Dengan Sopir</option>
-                    <option value="tanpa-sopir">
-                      Tanpa Sopir (Lepas Kunci)
-                    </option>
-                  </select>
-                </div>
-                <div className="col">
-                  <label className="ms-1 mb-2 fw-light">Tanggal</label>
-                  <input id="datepicker" placeholder="Pilih Tanggal" required />
-                </div>
-                <div className="col">
-                  <label className="ms-1 mb-2 fw-light">
-                    Waktu Jemput/Ambil
-                  </label>
-                  <input type="time" id="waktuAmbil" className="form-control" />
-                </div>
-                <div className="col">
-                  <label className="ms-1 mb-2 fw-light">
-                    Jumlah Penumpang (optional)
-                  </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    placeholder="Jumlah Penumpang"
-                    id="jumlahPenumpang"
-                  />
-                </div>
-                <div className="col mt-3">
-                  <button type="submit" className="custom-btn-1 py-2 px-4">
-                    Cari Mobil
-                  </button>
-                </div>
-              </div>
-              {/* </form> */}
+              <Form onSubmit={handleSubmit}>
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      <Label className="ms-1 mb-2 fw-light">Tipe Driver</Label>
+                      <Input
+                        type="select"
+                        name="tipeDriver"
+                        id="tipeDriver"
+                        value={tipeDriver}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="" disabled hidden>
+                          Pilih Tipe Driver
+                        </option>
+                        <option value="dengan-sopir">Dengan Sopir</option>
+                        <option value="tanpa-sopir">
+                          Tanpa Sopir (Lepas Kunci)
+                        </option>
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label className="ms-1 mb-2 fw-light">Tanggal</Label>
+                      <Input
+                        className="py-2"
+                        type="date"
+                        name="startDate"
+                        id="datepicker"
+                        value={startDate.toISOString().substring(0, 10)}
+                        onChange={handleChange}
+                        required
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label className="ms-1 mb-2 fw-light">
+                        Waktu Jemput/Ambil
+                      </Label>
+                      <Input
+                        className="py-2"
+                        type="time"
+                        name="waktuAmbil"
+                        id="waktuAmbil"
+                        required
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label className="ms-1 mb-2 fw-light">
+                        Jumlah Penumpang (optional)
+                      </Label>
+                      <Input
+                        className="py-2"
+                        type="number"
+                        name="jumlahPenumpang"
+                        id="jumlahPenumpang"
+                        placeholder="Jumlah Penumpang"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col className="my-auto">
+                    <Button
+                      type="submit"
+                      className="px-4 custom-btn-1"
+                      style={{
+                        backgroundColor: "#5CB85F",
+                        borderColor: "#5CB85F",
+                      }}
+                    >
+                      Cari Mobil
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
             </div>
           </div>
         </div>
