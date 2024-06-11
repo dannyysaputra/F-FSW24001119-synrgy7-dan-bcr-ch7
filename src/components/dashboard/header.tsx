@@ -26,6 +26,9 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, sidebarOpen }) => {
 
   const { logout } = useAuth();
 
+  const userDataString = localStorage.getItem('user');
+  const user = userDataString ? JSON.parse(userDataString) : null;
+
   return (
     <div>
       <Navbar color="light" expand="md" className={`py-3 col-12 ${sidebarOpen ? '' : 'w-100'}`}>
@@ -66,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, sidebarOpen }) => {
                   marginRight: "10px",
                 }}
               >
-                Unis Badri
+                {user ? user.name : 'User'}
               </div>
               <Dropdown
                 isOpen={dropdownOpen}

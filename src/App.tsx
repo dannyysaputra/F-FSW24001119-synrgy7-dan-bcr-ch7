@@ -25,13 +25,16 @@ function App() {
           </Route>
 
           <Route path="/dashboard" element={<LayoutDashboard />}>
-            <Route index element={
-              <Protected>
-                <HomeDashboard />
-              </Protected>
-            }></Route>
-            <Route path="login" element={<Login />} />
+            <Route
+              index
+              element={
+                <Protected>
+                  <HomeDashboard />
+                </Protected>
+              }
+            ></Route>
           </Route>
+          <Route path="/login" element={<Login />} />
         </Routes>
       </AuthProvider>
     </>

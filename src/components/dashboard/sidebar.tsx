@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { Nav, NavItem, NavLink } from "reactstrap";
 
 interface SidebarProps {
@@ -5,6 +6,10 @@ interface SidebarProps {
   }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+    const location = useLocation();
+
+    const isActive = location.pathname === '/dashboard';
+    
   return (
     <div className={`row ${isOpen ? '' : 'collapse'}`}>
       <div className="p-0 col-4">
@@ -44,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           </NavItem>
           <NavItem
             className="d-flex ms-3 pt-2 align-items-center justify-content-center"
-            style={{ backgroundColor: "rgba(207, 212, 238, 0.5)" }}
+            style={{ backgroundColor: isActive  ? "rgba(207, 212, 238, 0.5)" : '' }}
           >
             <NavLink
               href="#"
@@ -81,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           </NavItem>
           <NavItem
             className="d-flex align-items-center justify-content-center my-5"
-            style={{ backgroundColor: "#CFD4ED" }}
+            style={{ backgroundColor: isActive ? "#CFD4ED" : '' }}
           >
             <NavLink href="#" className="d-flex flex-column align-items-center">
               <div className="fw-bold fs-5 text-secondary">List Car</div>
