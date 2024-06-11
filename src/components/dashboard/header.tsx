@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, sidebarOpen }) => {
 
   return (
     <div>
-      <Navbar color="light" expand="md" className={`py-3 col-12 ${sidebarOpen ? '' : 'w-100'}`}>
+      <Navbar expand="md" className={`py-3 col-12 bg-white ${sidebarOpen ? '' : 'w-100'}`}>
         <Container className="mt-lg-2">
           <div className="d-flex justify-content-between">
             <div>
@@ -52,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, sidebarOpen }) => {
                   placeholder="Search..."
                   className="border-start-0"
                 />
-                <InputGroupText className="border-start-0 bg-white text-primary fw-semibold">
+                <InputGroupText className="border-start-0 bg-white text-primary fw-bold">
                   Search
                 </InputGroupText>
               </InputGroup>

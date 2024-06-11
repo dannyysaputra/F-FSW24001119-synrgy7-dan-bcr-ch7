@@ -12,6 +12,7 @@ import HomeDashboard from "./pages/dashboard/Index";
 
 import "./style.css";
 import LayoutDashboard from "./components/dashboard/layout";
+import AddCar from "./pages/dashboard/AddCar";
 
 function App() {
   return (
@@ -24,17 +25,27 @@ function App() {
             <Route path="cars" element={<Cars />} />
           </Route>
 
-          <Route path="/dashboard" element={<LayoutDashboard />}>
-            <Route
-              index
-              element={
-                <Protected>
-                  <HomeDashboard />
-                </Protected>
-              }
-            ></Route>
+          <Route path="/dashboard">
+            <Route element={<LayoutDashboard />}>
+              <Route
+                index
+                element={
+                  <Protected>
+                    <HomeDashboard />
+                  </Protected>
+                }
+              ></Route>
+              <Route
+                path="add-car"
+                element={
+                  <Protected>
+                    <AddCar />
+                  </Protected>
+                }
+              ></Route>
+            </Route>
+            <Route path="login" element={<Login />} />
           </Route>
-          <Route path="/login" element={<Login />} />
         </Routes>
       </AuthProvider>
     </>
