@@ -14,9 +14,13 @@ import "./style.css";
 import LayoutDashboard from "./components/dashboard/layout";
 import AddCar from "./pages/dashboard/AddCar";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <>
+      <ToastContainer />
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Layout />}>

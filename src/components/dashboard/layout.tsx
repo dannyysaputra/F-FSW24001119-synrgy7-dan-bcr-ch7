@@ -11,7 +11,7 @@ export default function LayoutDashboard() {
   };
 
   return (
-    <div className="row" style={{ backgroundColor: '#F4F5F7', height: '100vw' }}>
+    <div className="row" style={{ backgroundColor: '#F4F5F7', height: '100%' }}>
       <div className={`col-3 p-0 ${sidebarOpen ? "" : "collapse"}`}>
         <Sidebar isOpen={sidebarOpen} />
       </div>

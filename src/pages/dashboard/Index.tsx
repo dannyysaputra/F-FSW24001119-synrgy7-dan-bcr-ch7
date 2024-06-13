@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, CardBody, CardText } from "reactstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Car {
   id: string;
   image: string;
-  name: string;
+  manufacture: string;
+  model: string;
   updated_at: string;
-  price: number;
+  rentPerDay: number;
 }
 
 export default function HomeDashboard() {
@@ -18,6 +21,23 @@ export default function HomeDashboard() {
       try {
         const userDataString = localStorage.getItem("user");
         const user = userDataString ? JSON.parse(userDataString) : null;
+        const carCreated = localStorage.getItem("carCreated");
+
+        if (carCreated === "true") {
+          toast.success("Data Berhasil Disimpan", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          localStorage.removeItem("carCreated"); // Hapus setelah mengatur modal
+        }
+
+        console.log(user.token);
 
         if (!user.token) {
           throw new Error("No token found");
@@ -43,21 +63,21 @@ export default function HomeDashboard() {
   }, []);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('id-ID').format(price);
-  }
+    return new Intl.NumberFormat("id-ID").format(price);
+  };
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
     };
 
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('id-ID', options).format(date);
-  }
+    return new Intl.DateTimeFormat("id-ID", options).format(date);
+  };
 
   const styleActiveButton = {
     borderColor: "#0D28A6",
@@ -74,6 +94,12 @@ export default function HomeDashboard() {
     opacity: "0.4",
   };
 
+  const styleCardImage = {
+    objectFit: "cover",
+    width: "100%",
+    height: "300px",
+  };
+
   return (
     <div className="container">
       <div className="d-flex gap-2 my-3" style={{ fontSize: "12px" }}>
@@ -81,7 +107,7 @@ export default function HomeDashboard() {
         <div>
           <i className="fa-solid fa-angle-right"></i>
         </div>
-        <p style={{ fontWeight: "lighter" }}>List car</p>
+        <p style={{ fontWeight: "lighter" }}>List Car</p>
       </div>
       <div className="d-flex justify-content-between">
         <div className="fw-bold fs-3 my-3">List Car</div>
@@ -132,14 +158,19 @@ export default function HomeDashboard() {
           <div className="col" key={car.id}>
             <Card>
               <img
-                className="m-4"
+                className="p-3"
                 alt="Card"
                 src={car.image}
+                style={styleCardImage as React.CSSProperties}
               />
-              <CardBody>
+              <CardBody className="mt-3">
                 <CardText>
-                  <p>{car.name}/Tipe Mobil</p>
-                  <p className="fw-semibold">Rp {formatPrice(car.price)} / hari</p>
+                  <p>
+                    {car.manufacture} / {car.model}
+                  </p>
+                  <p className="fw-semibold">
+                    Rp {formatPrice(car.rentPerDay)} / hari
+                  </p>
                   <div className="d-flex gap-2">
                     <div>
                       <i className="fa-solid fa-key"></i>

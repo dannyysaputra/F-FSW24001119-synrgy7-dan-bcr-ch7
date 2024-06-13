@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "date-fns": "^3.6.0",
     "flickity": "^2.3.0",
     "react": "^18.3.1",
     "react-bootstrap-sidebar-menu": "^2.0.3",
     "react-dom": "^18.3.1",
     "react-flickity-component": "^4.0.7",
     "react-router-dom": "^6.23.1",
+    "react-toastify": "^10.0.5",
     "reactstrap": "^9.2.2"
   },
   "devDependencies": {
