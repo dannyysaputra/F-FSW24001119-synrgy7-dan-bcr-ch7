@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, CardBody, CardText } from "reactstrap";
-import { ToastContainer, toast } from "react-toastify";
+import DeleteConfirmation from "../../components/deleteConfirmation";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 interface Car {
@@ -15,6 +16,7 @@ interface Car {
 
 export default function HomeDashboard() {
   const [data, setData] = useState<Car[]>([]);
+  // const [deleteCarId, setDeleteCarId] = useState<string | null>(null); // State untuk menyimpan ID mobil yang akan dihapus
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,6 +64,49 @@ export default function HomeDashboard() {
     fetchData();
   }, []);
 
+  const handleDelete = async (carId: string) => {
+    try {
+      const userString = localStorage.getItem("user");
+      const user = userString ? JSON.parse(userString) : null;
+
+      if (!user.token) {
+        throw new Error("No token available");
+      }
+
+      const response = await fetch(
+        `http://localhost:5000/api/v1/cars/${carId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok" + response.statusText);
+      }
+
+      const data = await response.json();
+
+      setData(prevData => prevData.filter(car => car.id !== carId));
+
+      toast.success(data.message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      console.error("There was a problem with the delete operation:", error);
+    }
+  };
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID").format(price);
   };
@@ -101,7 +146,7 @@ export default function HomeDashboard() {
   };
 
   return (
-    <div className="container">
+    <div className="container mb-5">
       <div className="d-flex gap-2 my-3" style={{ fontSize: "12px" }}>
         <p className="fw-semibold">Cars</p>
         <div>
@@ -184,16 +229,10 @@ export default function HomeDashboard() {
                     <p>Updated at {formatDate(car.updated_at)}</p>
                   </div>
                   <div className="d-flex justify-content-between">
-                    <Link to={""}>
-                      <Button color="danger" outline>
-                        <div className="d-flex gap-2 my-1 mx-3 align-items-center">
-                          <div>
-                            <i className="fa-solid fa-trash"></i>
-                          </div>
-                          <div className="fw-semibold">Delete</div>
-                        </div>
-                      </Button>
-                    </Link>
+                    {/* Tombol Delete menggunakan DeleteConfirmation */}
+                    <DeleteConfirmation
+                      onConfirmDelete={() => handleDelete(car.id)}
+                    />
                     <Link to={""}>
                       <div className="btn p-0">
                         <div className="custom-btn-1 py-2 px-4">
