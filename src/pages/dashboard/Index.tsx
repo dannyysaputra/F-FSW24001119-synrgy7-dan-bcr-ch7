@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, CardBody, CardText } from "reactstrap";
+import { Card, CardBody, CardText } from "reactstrap";
 import DeleteConfirmation from "../../components/deleteConfirmation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -200,7 +200,7 @@ export default function HomeDashboard() {
       </div>
       <div className="row row-cols-3">
         {data.map((car) => (
-          <div className="col" key={car.id}>
+          <div className="col mb-4" key={car.id}>
             <Card>
               <img
                 className="p-3"
