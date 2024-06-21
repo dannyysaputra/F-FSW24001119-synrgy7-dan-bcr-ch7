@@ -1,5 +1,6 @@
 import car from "../assets/img/car.png";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useCar } from "../context/CarContext";
 import { toast } from "react-toastify";
 import {
   Form,
@@ -14,51 +15,13 @@ import {
   CardText,
 } from "reactstrap";
 
-interface Car {
-  id: string;
-  image: string;
-  manufacture: string;
-  model: string;
-  description: string;
-  capacity: number;
-  transmission: string;
-  year: number;
-  typeDriver: string;
-  availableAt: string;
-}
-
 export default function SearchCars() {
   const [tipeDriver, setTipeDriver] = useState<string>("");
   const [startDate, setStartDate] = useState<Date>(new Date()); // Preset to today
   const [waktuAmbil, setWaktuAmbil] = useState<string>("");
   const [jumlahPenumpang, setJumlahPenumpang] = useState<string>("");
-  const [cars, setCars] = useState<Car[]>([]);
-  const [filteredCars, setFilteredCars] = useState<Car[]>([]);
-  const [isFiltered, setIsFiltered] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/v1/cars", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
-        }
-
-        const result = await response.json();
-        setCars(result.data);
-        setFilteredCars(result.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { filteredCars, isFiltered, filterCars } = useCar();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -82,40 +45,10 @@ export default function SearchCars() {
     }
   };
 
-  const getStartDate = (isoDateString: string): Date => {
-    return new Date(isoDateString);
-  };
-
-  const getWaktuAmbil = (isoDateString: string): string => {
-    const date = new Date(isoDateString);
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  };
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Filter cars based on search criteria
-    const filtered = cars.filter((car) => {
-      const matchesTipeDriver =
-        tipeDriver === "" || car.typeDriver === tipeDriver;
-      const matchesStartDate =
-        startDate === null || getStartDate(car.availableAt) >= startDate;
-      const matchesWaktuAmbil =
-        waktuAmbil === "" || getWaktuAmbil(car.availableAt) === waktuAmbil;
-      const matchesJumlahPenumpang =
-        jumlahPenumpang === "" || car.capacity >= parseInt(jumlahPenumpang);
-
-      return (
-        (matchesTipeDriver && matchesStartDate && matchesWaktuAmbil) ||
-        matchesJumlahPenumpang
-      );
-    });
-
-    setFilteredCars(filtered);
-    setIsFiltered(true);
+    filterCars(tipeDriver, startDate, waktuAmbil, jumlahPenumpang);
     toast.success("Cars filtered successfully!");
   };
 

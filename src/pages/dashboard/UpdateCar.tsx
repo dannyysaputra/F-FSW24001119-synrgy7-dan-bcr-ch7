@@ -1,17 +1,15 @@
 import { Col, Form, FormGroup, FormText, Input, Label } from "reactstrap";
 import "./../../style.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCar } from "../../context/CarContext";
-import { useNavigate } from "react-router-dom";
-import { CarFormData } from "../../types";
+import { useNavigate, useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { CarFormData } from "../../types";
 
-export default function AddCar() {
-  const { addCar } = useCar();
+export default function UpdateCar() {
+  const { id } = useParams<{ id: string }>();
+  const { detailCar, updateCar } = useCar();
   const navigate = useNavigate();
-
-  const userDataString = localStorage.getItem("user");
-  const user = userDataString ? JSON.parse(userDataString) : null;
 
   const [formData, setFormData] = useState<CarFormData>({
     plate: "",
@@ -30,6 +28,40 @@ export default function AddCar() {
     options: [],
     specs: [],
   });
+
+  useEffect(() => {
+    const fetchCarDetails = async () => {
+      try {
+        if (!id) {
+          throw new Error("Id not provided");
+        }
+        const carData = await detailCar(id);
+
+        // Update formData state with carData received from detailCar
+        setFormData({
+          plate: carData.plate,
+          manufacture: carData.manufacture,
+          model: carData.model,
+          image: null, // Since image data is handled separately (usually not stored in form data)
+          rentPerDay: carData.rentPerDay,
+          capacity: carData.capacity,
+          description: carData.description,
+          transmission: carData.transmission,
+          type: carData.type,
+          typeDriver: carData.typeDriver,
+          year: carData.year,
+          availableAt: carData.availableAt,
+          available: carData.available,
+          options: carData.options,
+          specs: carData.specs,
+        });
+      } catch (error) {
+        console.error("Error fetching car details:", error);
+      }
+    };
+
+    fetchCarDetails();
+  }, [detailCar, id]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = event.target;
@@ -61,13 +93,12 @@ export default function AddCar() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    
     try {
-      if (!user.token) {
-        throw new Error("No token found");
+      if (!id) {
+        throw new Error("Car ID not found");
       }
-
-      await addCar(formData);
+      await updateCar(id, formData);
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
@@ -85,9 +116,9 @@ export default function AddCar() {
         <div>
           <i className="fa-solid fa-angle-right"></i>
         </div>
-        <p style={{ fontWeight: "lighter" }}>Add New Car</p>
+        <p style={{ fontWeight: "lighter" }}>Update Car</p>
       </div>
-      <div className="fw-bold fs-3 my-3">Add New Car</div>
+      <div className="fw-bold fs-3 my-3">Update Car</div>
 
       <div className="bg-white py-5 px-3 row">
         <div className="col-8">

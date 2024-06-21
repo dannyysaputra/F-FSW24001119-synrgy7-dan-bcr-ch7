@@ -16,10 +16,12 @@ import AddCar from "./pages/dashboard/AddCar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CarProvider } from "./context/CarContext";
+import UpdateCar from "./pages/dashboard/UpdateCar";
 
 function App() {
   return (
-    <>
+    <CarProvider>
       <ToastContainer />
       <AuthProvider>
         <Routes>
@@ -47,12 +49,20 @@ function App() {
                   </Protected>
                 }
               ></Route>
+              <Route
+                path="update-car/:id"
+                element={
+                  <Protected>
+                    <UpdateCar />
+                  </Protected>
+                }
+              ></Route>
             </Route>
             <Route path="login" element={<Login />} />
           </Route>
         </Routes>
       </AuthProvider>
-    </>
+    </CarProvider>
   );
 }
 

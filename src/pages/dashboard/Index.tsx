@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useCar } from "../../context/CarContext";
+import { Car } from "../../types";
 import { Card, CardBody, CardText } from "reactstrap";
 import DeleteConfirmation from "../../components/deleteConfirmation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface Car {
-  id: string;
-  image: string;
-  manufacture: string;
-  model: string;
-  updated_at: string;
-  rentPerDay: number;
-}
-
 export default function HomeDashboard() {
   const [data, setData] = useState<Car[]>([]);
-  // const [deleteCarId, setDeleteCarId] = useState<string | null>(null); // State untuk menyimpan ID mobil yang akan dihapus
+  const { cars, fetchCars, deleteCar } = useCar();
+
+  useEffect(() => {
+    setData(cars);
+  }, [cars]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,69 +36,21 @@ export default function HomeDashboard() {
           localStorage.removeItem("carCreated"); // Hapus setelah mengatur modal
         }
 
-        console.log(user.token);
-
         if (!user.token) {
           throw new Error("No token found");
         }
 
-        const response = await fetch("http://localhost:5000/api/v1/cars", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
-        });
-
-        const result = await response.json();
-
-        setData(result.data);
-        console.log(result);
+        await fetchCars();
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [fetchCars]);
 
   const handleDelete = async (carId: string) => {
     try {
-      const userString = localStorage.getItem("user");
-      const user = userString ? JSON.parse(userString) : null;
-
-      if (!user.token) {
-        throw new Error("No token available");
-      }
-
-      const response = await fetch(
-        `http://localhost:5000/api/v1/cars/${carId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok" + response.statusText);
-      }
-
-      const data = await response.json();
-
-      setData(prevData => prevData.filter(car => car.id !== carId));
-
-      toast.success(data.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      await deleteCar(carId);
     } catch (error) {
       console.error("There was a problem with the delete operation:", error);
     }
@@ -233,7 +182,7 @@ export default function HomeDashboard() {
                     <DeleteConfirmation
                       onConfirmDelete={() => handleDelete(car.id)}
                     />
-                    <Link to={""}>
+                    <Link to={`/dashboard/update-car/${car.id}`}>
                       <div className="btn p-0">
                         <div className="custom-btn-1 py-2 px-4">
                           <div className="d-flex gap-2 my-1 mx-3 align-items-center">
