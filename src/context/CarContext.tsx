@@ -58,13 +58,16 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
       //   throw new Error("No token found");
       // }
 
-      const response = await fetch("http://localhost:5000/api/v1/cars", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: "Bearer " + user.token,
-        },
-      });
+      const response = await fetch(
+        "https://environmental-toma-dannyysaputra-0c2bc4dd.koyeb.app/api/v1/cars",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: "Bearer " + user.token,
+          },
+        }
+      );
 
       const result = await response.json();
       setCars(result.data);
@@ -83,13 +86,16 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
         throw new Error("No token found");
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/cars/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + user.token,
-        },
-      });
+      const response = await fetch(
+        `https://environmental-toma-dannyysaputra-0c2bc4dd.koyeb.app/api/v1/cars/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + user.token,
+          },
+        }
+      );
 
       const result = await response.json();
       return result.data;
@@ -121,13 +127,16 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
         }
       });
 
-      const response = await fetch("http://localhost:5000/api/v1/cars", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: formDataToSend,
-      });
+      const response = await fetch(
+        "https://environmental-toma-dannyysaputra-0c2bc4dd.koyeb.app/api/v1/cars",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: formDataToSend,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -167,11 +176,11 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
     try {
       const userDataString = localStorage.getItem("user");
       const user = userDataString ? JSON.parse(userDataString) : null;
-  
+
       if (!user || !user.token) {
         throw new Error("User token not found");
       }
-  
+
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         if (key === "image" && value instanceof File) {
@@ -182,9 +191,9 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
           formDataToSend.append(key, value.toString());
         }
       });
-  
+
       const response = await fetch(
-        `http://localhost:5000/api/v1/cars/${carId}`,
+        `https://environmental-toma-dannyysaputra-0c2bc4dd.koyeb.app/api/v1/cars/${carId}`,
         {
           method: "PUT",
           headers: {
@@ -193,11 +202,11 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
           body: formDataToSend,
         }
       );
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Server error response:", errorText);
-  
+
         try {
           const errorData = JSON.parse(errorText);
           toast.error(errorData.message, {
@@ -246,7 +255,6 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
       });
     }
   };
-  
 
   const deleteCar = async (carId: string) => {
     try {
@@ -257,13 +265,16 @@ export const CarProvider: React.FC<CarProviderProps> = ({ children }) => {
         throw new Error("No token found");
       }
 
-      await fetch(`http://localhost:5000/api/v1/cars/${carId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + user.token,
-        },
-      });
+      await fetch(
+        `https://environmental-toma-dannyysaputra-0c2bc4dd.koyeb.app/api/v1/cars/${carId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + user.token,
+          },
+        }
+      );
 
       setCars((prevCars) => prevCars.filter((car) => car.id !== carId));
       setFilteredCars((prevCars) => prevCars.filter((car) => car.id !== carId));
